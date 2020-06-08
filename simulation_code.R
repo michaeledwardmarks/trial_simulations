@@ -20,8 +20,9 @@ study <- bind_rows(arm_1,arm_2)
 #Store the confidence interval
 #Store the input size
 f <- function (N) {
-  df <- sample_n(study, N)
-  result <- prop.test(c(length(df$Outcome[df$Outcome==1 & df$Arm==1]),length(df$Outcome[df$Outcome==1 & df$Arm==2])),c(length(df$Outcome[df$Arm==1]),length(df$Outcome[df$Arm==2])))
+  arm_1_df <- sample_n(arm_1, N/2)
+  arm_2_df <- sample_n(arm_2, N/2)
+  result <- prop.test(c(length(arm_1_df$Outcome[arm_1_df$Outcome==1 ]),length(arm_2_df$Outcome[arm_2_df$Outcome==1])),c(length(arm_1_df$Outcome),length(arm_2_df$Outcome)))
   p_valee <- as.data.frame(as.numeric(result$p.value))
   conf1 <- as.data.frame(as.numeric(result$conf.int)[1])
   conf2 <- as.data.frame(as.numeric(result$conf.int)[2])
@@ -29,8 +30,6 @@ f <- function (N) {
   outcome <- bind_cols(p_valee,conf1,conf2,size)
   return(outcome)
 }
-result$conf.int
-
 
 #Test the function at different sizes of sub-sample
 #Make a list 20/50/100/200/500/1000
